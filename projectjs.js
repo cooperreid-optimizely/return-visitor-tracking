@@ -56,7 +56,7 @@ window.__optReturnVisitorTracker = (function() {
         logger.log('+++ sawInPreviousBrowserSession', sawInPreviousBrowserSession);
         /**
         * Set the cookie flag again so we don't keep re-firing event on subsequent refreshes of the page
-        * This essentially is a 'fire once' functionality
+        * This essentially is a 'fire once' per session behavior
         */
         if(sawInPreviousBrowserSession) cookieUtil(makeCookieKey(experimentId), "saw", 0, '/');
 
