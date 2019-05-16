@@ -18,8 +18,12 @@ var runExt = function() {
   } catch(err) { console.log(err); }     
 }
 
-if(window.__optReturnVisitorTracker.initialized) runExt();
-else {
+if(window.__optReturnVisitorTracker.initialized) {
+ // handle delayed campaigns
+ runExt();
+}
+else { 
+  // syncronous campaigns cause a weird race condition with PJS, so wait until lifecycle.activated to run
   window.optimizely.push({
     type: "addListener",
     filter: {
