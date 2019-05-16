@@ -112,8 +112,8 @@ window.__optReturnVisitorTracker = (function() {
         if(!localStorage.getItem(extKey)) localStorage.setItem(extKey, '{}');
 
         // loop over all experiments in LS and fire a return visit if necessary
-        var extensionsActive = JSON.parse(localStorage.getItem(extKey)) || {};
-        for(var expId in extensionsActive) {
+        var trackableExperimentsData = JSON.parse(localStorage.getItem(extKey)) || {};
+        for(var expId in trackableExperimentsData) {
           checkTrackableExperiments(expId);
         }                  
         API.initialized = true;
