@@ -106,7 +106,7 @@ window.__optReturnVisitorTracker = (function() {
       handler: function(event) {
         /****** BEGIN INIT ROUTINE ******/    
         currentSessionId = optimizely.get('session').sessionId;
-        logger.log('+++ INIT v0.1 +++', currentSessionId, (new Date).getTime());                   
+        logger.log('+++ INIT v0.3 +++', currentSessionId, (new Date).getTime());                   
 
         // make sure base LS entry exists
         if(!localStorage.getItem(extKey)) localStorage.setItem(extKey, '{}');
