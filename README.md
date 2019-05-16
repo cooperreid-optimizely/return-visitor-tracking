@@ -1,7 +1,7 @@
 # Track Return Visitors in Optimizely
 Track visitors that return back to the site in a new session after being exposed to an experiment
 
-![View](https://github.com/cooperreid-optimizely/return-visitor-tracking/blob/master/ext.png?raw=true)
+![View](https://github.com/cooperreid-optimizely/return-visitor-tracking/blob/master/img/ext.png?raw=true)
 
 ## Installing 
 * Copy the [`projectjs.min.js`](https://github.com/cooperreid-optimizely/return-visitor-tracking/blob/master/projectjs.min.js) content and add it to your Project Javascript
@@ -17,10 +17,10 @@ Track visitors that return back to the site in a new session after being exposed
 * Turn on logging by setting a localStorage flag `localStorage.setItem('__optReturnVisitorTrackerDebug', 1)`
 * Log all data set in localStorage `localStorage.getItem('__optReturnVisitorTracking')`
 
-![View](https://github.com/cooperreid-optimizely/return-visitor-tracking/blob/master/debug1.png?raw=true)
+![View](https://github.com/cooperreid-optimizely/return-visitor-tracking/blob/master/img/debug1.png?raw=true)
 > view with debug log on. return visitor event not detected/tracked
 
-![View](https://github.com/cooperreid-optimizely/return-visitor-tracking/blob/master/debug2.png?raw=true)
+![View](https://github.com/cooperreid-optimizely/return-visitor-tracking/blob/master/img/debug2.png?raw=true)
 > view with debug log on. return visitor event detected, tracking call sent to optimizely
 
 ## Notes
