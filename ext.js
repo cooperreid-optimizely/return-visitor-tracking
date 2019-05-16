@@ -3,9 +3,13 @@ window.optimizely.push({
   type: "addListener",
   filter: {
     "type": "lifecycle",
-    "name": "activated" // happens before init, act
+    "name": "activated"
   },
   handler: function(event) {
+    /**
+    * Wrapping the extension body is necessary to ensure the code
+    * runs after Project JavaScript
+    */
     try {
       var forwardToPJS = {
         mode: extension.mode,
