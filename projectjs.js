@@ -106,7 +106,7 @@ window.__optReturnVisitorTracker = (function() {
       handler: function(event) {
         /****** BEGIN INIT ROUTINE ******/    
         currentSessionId = optimizely.get('session').sessionId;
-        logger.log('+++ INIT v0.1 +++', currentSessionId, (new Date).getTime());
+        logger.log('+++ INIT v0.1 +++', currentSessionId, (new Date).getTime());                   
 
         // make sure base LS entry exists
         if(!localStorage.getItem(extKey)) localStorage.setItem(extKey, '{}');
@@ -115,14 +115,19 @@ window.__optReturnVisitorTracker = (function() {
         var extensionsActive = JSON.parse(localStorage.getItem(extKey)) || {};
         for(var expId in extensionsActive) {
           checkTrackableExperiments(expId);
-        }                 
+        }                  
+        API.initialized = true;
         /****** END INIT ROUTINE ******/
       }
     });        
 
-    return {
+    var API = {
+        initialized: false,
         getParams, getParams,
         setParams: setParams,
         decisionMade: decisionMade
     }
+    
+    return API;
+    
 })();
