@@ -30,28 +30,10 @@
           }
         ]
       }
-    },
-    {
-      "default_value": "off",
-      "field_type": "dropdown",
-      "name": "debug",
-      "label": "Debug Console ",
-      "options": {
-        "choices": [
-          {
-            "value": "off",
-            "label": "off"
-          },
-          {
-            "value": "on",
-            "label": "on"
-          }
-        ]
-      }
     }
   ],
   "description": "Track visitors that return back to the site in a new session after being exposed to an experiment",
   "options": {
-    "track_layer_decision": "/**\n* if visitor saw the experiment before, in a different session, send \"return visitor\" event\n* return visitor metric needs to be scoped to an experiment by using some unique string or ID\n*/\nwindow.optimizely = window.optimizely || [];\n\n/*\n* Cookie Util\n* https://github.com/litejs/browser-cookie-lite\n* cookie(name, value, [ttl], [path], [domain], [secure])\n*/\nvar cookieUtil=function(e,o,n,t,i,c){return arguments.length>1?document.cookie=e+\"=\"+encodeURIComponent(o)+(n?\"; expires=\"+new Date(+new Date+1e3*n).toUTCString():\"\")+(t?\"; path=\"+t:\"\")+(i?\"; domain=\"+i:\"\")+(c?\"; secure\":\"\"):decodeURIComponent(((\"; \"+document.cookie).split(\"; \"+e+\"=\")[1]||\"\").split(\";\")[0])}\nvar experimentId = experimentId; // part of scope in custom extension code\nvar flagKey = 'saw_exp_' + experimentId;\nvar currentSessionId = optimizely.get('session').sessionId;\nvar logger = (function() {\n  if(extension.debug === 'on') return console;\n  return {log: function() {}, group: function() {}, groupEnd: function() {}, groupCollapsed: function() {}, dir: function() {}};\n})();\n\nlogger.log('opt: In the \"Track Return Visitors\" extension', extension);\n\n// check visitor attributes to see if the visitor has seen the experiment in a different optimizely session\nvar sawExperimentPreviously = (function() {\n  try {\n    return optimizely.get('visitor').custom[flagKey].value;\n  } catch(err) { return null; }\n})() || null;\nvar sawInPreviousOptimizelySession = sawExperimentPreviously && (sawExperimentPreviously != currentSessionId);\n\n// check experiment cookie to see if they've seen it before in this session\nvar sawExpCookie = cookieUtil(flagKey) || null;\nvar sawInPreviousBrowserSession = !sawExpCookie && sawExperimentPreviously;\n\nswitch(extension.mode) {\n  case 'both':\n    if(sawInPreviousOptimizelySession || sawInPreviousBrowserSession) {\n      // track event\n      logger.log('opt: fire event, return (optimizely OR browser session):', extension.return_visitor_evt_apiname);\n    } \n    break;\n  case 'browser':\n    if(sawInPreviousBrowserSession) {\n      // track event\n      logger.log('opt: fire event, return visitor (browser session):', extension.return_visitor_evt_apiname);\n    } \n    break;\n  case 'optimizely':\n    if(sawInPreviousOptimizelySession) {\n      // track event\n      logger.log('opt: fire event, return visitor (optimizely session):', extension.return_visitor_evt_apiname);\n    } \n    break;\n   \n}\n\n// set localStorageFlag\nvar sawExpInSession = {};\nsawExpInSession[flagKey] = currentSessionId;\noptimizely.push({\n  \"type\": \"user\",\n  \"attributes\": sawExpInSession\n});\n\n// set session cookie flag\ncookieUtil(flagKey, currentSessionId, 0, '/');"
+    "track_layer_decision": "/**\n* if visitor saw the experiment before, in a different session, send \"return visitor\" event\n* return visitor metric needs to be scoped to an experiment by using some unique string or ID\n*/\nsetTimeout(function() {\n\n  try {\n    var forwardToPJS = {\n      mode: extension.mode,\n      return_visitor_evt_apiname: extension.return_visitor_evt_apiname,   \n      experimentId: experimentId,\n      campaignId: campaignId,\n      variationId: variationId,\n      isHoldback: isHoldback\n    };\n    window.__optReturnVisitorTracker.setParams(forwardToPJS);\n    window.__optReturnVisitorTracker.decisionMade(experimentId);\n  } catch(err) { console.log(err); }\n  \n}, 0);\n\n"
   }
 }
