@@ -17,6 +17,12 @@ Track visitors that return back to the site in a new session after being exposed
 * Turn on logging by setting a localStorage flag `localStorage.setItem('__optReturnVisitorTrackerDebug', 1)`
 * Log all data set in localStorage `localStorage.getItem('__optReturnVisitorTracking')`
 
+![View](https://github.com/cooperreid-optimizely/return-visitor-tracking/blob/master/debug1.png?raw=true)
+> view with debug log on. return visitor event not detected/tracked
+
+![View](https://github.com/cooperreid-optimizely/return-visitor-tracking/blob/master/debug2.png?raw=true)
+> view with debug log on. return visitor event detected, tracking call sent to optimizely
+
 ## Notes
 * A [Browser Session](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#Session_cookies) is defined by a user closing the browser. Extension sets a 'session cookie'
 * An [Optimizely Session](https://help.optimizely.com/Analyze_Results/How_Optimizely_counts_conversions) is defined by a 30 minute period of inactivity.
