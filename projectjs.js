@@ -1,11 +1,10 @@
-// pjs.js
 window.optimizely = window.optimizely || [];
-
 window.__optReturnVisitorTracker = (function() {
 
     /**
     * if visitor saw the experiment before, in a different session, send "return visitor" event
     * return visitor metric needs to be scoped to an experiment by using some unique string or ID
+    * the event will fire once per new session (either opt or browser session)
     */
 
     /*
@@ -36,21 +35,30 @@ window.__optReturnVisitorTracker = (function() {
         logger.log('+++ Set Optimizely Session flag', currentSessionId);
 
         // // set session cookie flag
-        cookieUtil(makeCookieKey(experimentId), currentSessionId, 0, '/');
+        cookieUtil(makeCookieKey(experimentId), "saw", 0, '/');
         logger.log('+++ Set Cookie Session flag', makeCookieKey(experimentId), '=', currentSessionId);
     }
 
-    var checkTrackingExperiments = function(experimentId) {
-        // // check visitor attributes to see if the visitor has seen the experiment in a different optimizely session        
+    var checkTrackableExperiments = function(experimentId) {
+        /**
+        * check localstorage data to see if the visitor has seen the experiment in a different optimizely session        
+        */
         var extData = getParams(experimentId) || {};
         var sawExperimentPreviously = extData.session;
         var sawInPreviousOptimizelySession = sawExperimentPreviously && (sawExperimentPreviously != currentSessionId);
-        logger.log('+++ sawInPreviousOptimizelySession', sawInPreviousOptimizelySession);
+        logger.log('+++ sawInPreviousOptimizelySession', sawInPreviousOptimizelySession);        
         
-        // // check experiment cookie to see if they've seen it before in this session
+        /**
+        * Check experiment cookie to see if they've seen it before in this session
+        */
         var sawExpCookie = cookieUtil(makeCookieKey(experimentId)) || null;
         var sawInPreviousBrowserSession = !!(!sawExpCookie && sawExperimentPreviously);              
         logger.log('+++ sawInPreviousBrowserSession', sawInPreviousBrowserSession);
+        /**
+        * Set the cookie flag again so we don't keep re-firing event on subsequent refreshes of the page
+        * This essentially is a 'fire once' functionality
+        */
+        if(sawInPreviousBrowserSession) cookieUtil(makeCookieKey(experimentId), "saw", 0, '/');
 
         switch(extData.mode) {
           case 'both':
@@ -98,7 +106,7 @@ window.__optReturnVisitorTracker = (function() {
       handler: function(event) {
         /****** BEGIN INIT ROUTINE ******/    
         currentSessionId = optimizely.get('session').sessionId;
-        logger.log('+++ INIT +++', currentSessionId, (new Date).getTime());
+        logger.log('+++ INIT v0.1 +++', currentSessionId, (new Date).getTime());
 
         // make sure base LS entry exists
         if(!localStorage.getItem(extKey)) localStorage.setItem(extKey, '{}');
@@ -106,7 +114,7 @@ window.__optReturnVisitorTracker = (function() {
         // loop over all experiments in LS and fire a return visit if necessary
         var extensionsActive = JSON.parse(localStorage.getItem(extKey)) || {};
         for(var expId in extensionsActive) {
-          checkTrackingExperiments(expId);
+          checkTrackableExperiments(expId);
         }                 
         /****** END INIT ROUTINE ******/
       }

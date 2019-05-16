@@ -6,11 +6,10 @@ window.optimizely.push({
     "name": "activated"
   },
   handler: function(event) {
-    /**
-    * Wrapping the extension body is necessary to ensure the code
-    * runs after Project JavaScript
-    */
     try {
+      if(!!localStorage.getItem('__optReturnVisitorTrackerDebug')) {
+        console.log('+++ In the Ext handler', (new Date).getTime());
+      }
       var forwardToPJS = {
         mode: extension.mode,
         return_visitor_evt_apiname: extension.return_visitor_evt_apiname,   
@@ -24,3 +23,7 @@ window.optimizely.push({
     } catch(err) { console.log(err); }    
   }
 });   
+
+if(!!localStorage.getItem('__optReturnVisitorTrackerDebug')) {
+  console.log('+++ In the Ext Body', (new Date).getTime());
+}
