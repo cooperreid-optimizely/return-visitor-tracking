@@ -101,7 +101,7 @@ window.__optReturnVisitorTracker = (function() {
       type: "addListener",
       filter: {
         "type": "lifecycle",
-        "name": "activated" // happens before init, act
+        "name": "activated" // session id ready at this point
       },
       handler: function(event) {
         /****** BEGIN INIT ROUTINE ******/    
