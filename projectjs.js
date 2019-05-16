@@ -1,3 +1,4 @@
+// pjs.js
 window.optimizely = window.optimizely || [];
 
 window.__optReturnVisitorTracker = (function() {
@@ -92,12 +93,12 @@ window.__optReturnVisitorTracker = (function() {
       type: "addListener",
       filter: {
         "type": "lifecycle",
-        "name": "campaignDecided" // happens before init, act
+        "name": "activated" // happens before init, act
       },
       handler: function(event) {
         /****** BEGIN INIT ROUTINE ******/    
         currentSessionId = optimizely.get('session').sessionId;
-        logger.log('+++ INIT +++', currentSessionId);
+        logger.log('+++ INIT +++', currentSessionId, (new Date).getTime());
 
         // make sure base LS entry exists
         if(!localStorage.getItem(extKey)) localStorage.setItem(extKey, '{}');
